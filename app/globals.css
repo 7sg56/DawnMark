@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --bg: #ffffff;
+  --fg: #111111; /* primary black-ish */
+  --accent: #e11d2f; /* restrained red */
+  --muted: #6b7280; /* gray */
+  --surface: #f7f7f7;
+  --border: #e5e7eb;
+  --header-h: 56px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #0a0a0a;
+    --fg: #f5f5f5;
+    --surface: #111213;
+    --border: #1f2937;
   }
 }
 
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  overflow: hidden; /* lock page scroll */
 }
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  min-height: var(--header-h);
+}
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .2px; }
+.brand .logo { font-size: 20px; }
+.brand .name { font-size: 18px; }
+.author { color: var(--fg); text-decoration: none; border-bottom: 1px dotted transparent; }
+.author:hover { color: var(--fg); border-color: var(--accent); }
+
+.dm-container {
+  display: grid;
+  grid-template-columns: 40vw 60vw; /* editor 40vw, preview 60vw */
+  width: 100vw;
+  gap: 0;
+  height: calc(100dvh - var(--header-h));
+  overflow: hidden; /* lock container scroll */
+}
+
+@media (max-width: 900px) {
+  /* Keep 40/60 split on smaller widths per spec */
+  .dm-container { grid-template-columns: 40vw 60vw; }
+}
+
+.left, .right { height: 100%; min-height: 0; overflow: hidden; }
+.left { border-right: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.right { padding: 16px; display: flex; }
+
+.uploader { display: flex; flex-direction: column; gap: 10px; }
+.uploader-top { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
+.button {
+  appearance: none; border: 1px solid var(--fg); background: var(--fg); color: var(--bg);
+  padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer;
+}
+.button:hover { filter: brightness(0.95); }
+.button:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.dropzone {
+  border: 1px dashed var(--border); border-radius: 6px; min-height: 46px; display: grid; place-items: center;
+  color: var(--muted); cursor: pointer; background: var(--surface);
+}
+.dropzone:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dropzone.dragover { border-color: var(--accent); color: var(--fg); }
+
+.file-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.file-item { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: var(--bg); cursor: pointer; }
+.file-item:hover { border-color: var(--accent); }
+.file-name { display: block; font-size: 12px; word-break: break-all; }
+.file-meta { display: block; font-size: 11px; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 12px; }
+
+.editor-wrap { flex: 1 1 auto; display: flex; min-height: 0; height: 100%; }
+#editor {
+  width: 100%; height: 100%; flex: 1 1 auto; resize: none; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 14px; line-height: 1.6; background: var(--surface);
+}
+#editor:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.preview { height: 100%; width: 100%; flex: 1 1 auto; min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow: auto; background: var(--surface); }
+.preview img { max-width: 100%; height: auto; }
+
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 8px 12px; border-radius: 999px; font-size: 12px; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+.toast.show { opacity: 1; }
+
+/* Ensure badges/images render inline like GitHub (override Tailwind preflight) */
+.markdown-body img { display: inline-block; vertical-align: middle; }
+/* Keep badge rows horizontal inside paragraphs */
+.markdown-body p > img,
+.markdown-body p > a > img { display: inline-block; vertical-align: middle; margin-right: 4px; }
