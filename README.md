@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DawnMark
 
-## Getting Started
+A modern, professional Markdown editor built with Next.js 15 that provides real-time preview, file management, and mathematical expression support. DawnMark combines the simplicity of Markdown with powerful features for technical writing and documentation.
 
-First, run the development server:
+## 🚀 [Live Demo](https://dawnmark.netlify.app)
+
+![DawnMark Screenshot](public/assets/dawnmark-screenshot.png)
+
+> Experience DawnMark in action at [dawnmark.netlify.app](https://dawnmark.netlify.app)
+
+## Features
+
+### Core Functionality
+- **Live Preview**: Instant Markdown rendering with synchronized scrolling
+- **Syntax Highlighting**: Code blocks with highlight.js and 180+ language support
+- **File Management**: Drag & drop file uploads with automatic blob URL generation
+- **LaTeX Support**: Mathematical expressions via KaTeX (`$inline$` and `$$display$$`)
+- **Export Options**: Save as Markdown (.md) or HTML files
+
+### User Experience  
+- **Theme Switching**: Dynamic dark/light mode with proper syntax highlighting themes
+- **Auto-save**: Content automatically saved to localStorage
+- **Responsive Design**: Optimized for desktop editing workflows
+- **Accessibility**: ARIA labels, keyboard navigation, and screen reader support
+
+## Quick Start
 
 ```bash
+# Clone and install
+git clone https://github.com/7sg56/dawnmark-v3.git
+cd dawnmark-v3
+npm install
+
+# Development
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Production
+npm run build
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Basic Editing
+- **Editor Panel**: Type Markdown syntax in the left panel
+- **Preview Panel**: See real-time rendered output on the right
+- **Auto-save**: Your work is automatically saved to browser storage
 
-## Learn More
+### File Attachments
+- Drag and drop files into the upload area or click to browse
+- Images generate `![filename](blob:url)` snippets
+- Other files create `[filename](blob:url)` download links
+- Click generated snippets to copy to clipboard
 
-To learn more about Next.js, take a look at the following resources:
+### Mathematical Expressions
+- **Inline math**: `$E = mc^2$` renders as $E = mc^2$
+- **Display math**: `$$\sum_{i=1}^{n} x_i$$` renders as centered equations
+- Full KaTeX syntax support for complex mathematical notation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Customization
+- **Theme Toggle**: Switch between dark and light modes (header button)
+- **Export**: Download your work as `.md` or `.html` files
+- **Syntax Themes**: Code highlighting automatically matches your selected theme
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tech Stack
 
-## Deploy on Vercel
+### Frontend Framework
+- **Next.js 15** - React framework with App Router and Turbopack
+- **React 19** - Latest React features with concurrent rendering
+- **TypeScript** - Full type safety and IntelliSense support
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Styling & UI
+- **Tailwind CSS v4** - Utility-first CSS framework via PostCSS
+- **Custom CSS Variables** - Dynamic theming system
+- **Responsive Design** - Mobile-first approach with breakpoints
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Markdown & Content Processing
+- **Marked** - Fast Markdown parser with GFM support
+- **KaTeX** - High-quality mathematical typesetting
+- **highlight.js** - Syntax highlighting for 180+ languages
+- **DOMPurify** - XSS protection and HTML sanitization
+
+## Architecture
+
+- **Client-Side Only**: No backend dependencies, runs entirely in browser
+- **Component-Based**: Modular React components (Editor, Preview, Upload, Theme)
+- **Local Storage**: Automatic content persistence without external databases
+- **Blob URLs**: Secure file handling without server uploads
+- **CSS Custom Properties**: Dynamic theme switching without JavaScript re-renders
+
+## Deployment
+
+Deploy to [Vercel](https://vercel.com) (recommended), [Netlify](https://netlify.com), or any Next.js-compatible platform.
+
+**Live Example**: This project is deployed at [dawnmark.netlify.app](https://dawnmark.netlify.app) using Netlify's automatic deployment from GitHub.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+Made by [Sourish Ghosh](https://github.com/7sg56)
