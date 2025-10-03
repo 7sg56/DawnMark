@@ -4,7 +4,7 @@
 Welcome to **DawnMark** - the most powerful **online markdown editor** with live preview and media embedding! **Edit markdown online** for free with our advanced **markdown editor** featuring real-time preview, LaTeX support, and live media embedding. Perfect for developers, writers, and technical documentation. No signup required - start using our **free online markdown editor** instantly!
 
 [![Made by 7sg56](https://img.shields.io/badge/Made%20by-7sg56-blue)](https://github.com/7sg56)
-![Version](https://img.shields.io/badge/Version-1.0-green)
+![Version](https://img.shields.io/badge/Version-1.2-green)
 
 ---
 
