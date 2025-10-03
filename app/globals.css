@@ -35,13 +35,22 @@ html.dark {
 }
 
 * { box-sizing: border-box; }
+
+html {
+  /* Smooth transitions for theme variables */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 html, body { height: 100%; }
+
 body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   overflow: hidden; /* lock page scroll */
+  /* Smooth transitions for background and text */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .app-header {
@@ -51,6 +60,7 @@ body {
   padding: 16px 20px;
   border-bottom: 1px solid var(--border);
   min-height: var(--header-h);
+  transition: border-color 0.3s ease;
 }
 .brand { display: inline-flex; align-items: center; }
 .brand-text {
@@ -85,11 +95,36 @@ body {
   transition: all 0.2s ease;
 }
 
-.theme-toggle:hover {
+.theme-toggle:hover:not(:disabled) {
   background: var(--bg);
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-1px);
+}
+
+.theme-toggle:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.theme-toggle.loading {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Spin animation for loading spinner */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
 .author { 
@@ -125,7 +160,16 @@ body {
 .left > .panel.grow { flex: 1 1 0; }
 
 /* Panel shell with header actions */
-.panel { border: 1px solid var(--panel-border); border-radius: 12px; background: var(--surface); display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.panel { 
+  border: 1px solid var(--panel-border); 
+  border-radius: 12px; 
+  background: var(--surface); 
+  display: flex; 
+  flex-direction: column; 
+  min-height: 0; 
+  overflow: hidden;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
 .panel.grow { flex: 1 1 auto; min-height: 0; }
 .panel-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--panel-border); border-radius: 12px 12px 0 0; background: color-mix(in oklab, var(--bg) 85%, var(--surface)); }
 .panel-title { font-weight: 600; font-size: 13px; letter-spacing: .2px; }

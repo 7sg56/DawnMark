@@ -7,53 +7,83 @@ type Theme = "dark" | "light";
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  isLoading: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Helper function to load CSS with promise
+function loadCSS(id: string, href: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    // Remove existing link if present
+    const existing = document.getElementById(id);
+    if (existing) {
+      existing.remove();
+    }
+    
+    const link = document.createElement('link');
+    link.id = id;
+    link.rel = 'stylesheet';
+    link.href = href;
+    
+    link.onload = () => resolve();
+    link.onerror = () => reject(new Error(`Failed to load ${href}`));
+    
+    document.head.appendChild(link);
+  });
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Apply theme class to html element
-    document.documentElement.className = theme;
-    console.log('Theme changed to:', theme);
-    
-    // Dynamically load GitHub markdown CSS based on theme
-    const existingGithubLink = document.getElementById('github-markdown-css');
-    if (existingGithubLink) {
-      existingGithubLink.remove();
+    async function applyTheme() {
+      setIsLoading(true);
+      
+      try {
+        // First, apply the theme class immediately for CSS variables
+        document.documentElement.className = theme;
+        
+        // Then load external stylesheets in parallel
+        const githubCSSUrl = theme === 'dark'
+          ? 'https://unpkg.com/github-markdown-css@5/github-markdown-dark.css'
+          : 'https://unpkg.com/github-markdown-css@5/github-markdown-light.css';
+          
+        const hljsCSSUrl = theme === 'dark'
+          ? 'https://unpkg.com/highlight.js@11.10.0/styles/github-dark-dimmed.css'
+          : 'https://unpkg.com/highlight.js@11.10.0/styles/github.css';
+        
+        // Load both stylesheets in parallel
+        await Promise.all([
+          loadCSS('github-markdown-css', githubCSSUrl),
+          loadCSS('highlightjs-css', hljsCSSUrl)
+        ]);
+        
+        // Force a small delay to ensure CSS is fully applied
+        await new Promise(resolve => setTimeout(resolve, 50));
+        
+        console.log('Theme successfully applied:', theme);
+      } catch (error) {
+        console.error('Error applying theme:', error);
+        // Fallback: at least ensure the theme class is applied
+        document.documentElement.className = theme;
+      } finally {
+        setIsLoading(false);
+      }
     }
     
-    const githubLink = document.createElement('link');
-    githubLink.id = 'github-markdown-css';
-    githubLink.rel = 'stylesheet';
-    githubLink.href = theme === 'dark'
-      ? 'https://unpkg.com/github-markdown-css@5/github-markdown-dark.css'
-      : 'https://unpkg.com/github-markdown-css@5/github-markdown-light.css';
-    document.head.appendChild(githubLink);
-    
-    // Dynamically load highlight.js CSS based on theme
-    const existingHljsLink = document.getElementById('highlightjs-css');
-    if (existingHljsLink) {
-      existingHljsLink.remove();
-    }
-    
-    const hljsLink = document.createElement('link');
-    hljsLink.id = 'highlightjs-css';
-    hljsLink.rel = 'stylesheet';
-    hljsLink.href = theme === 'dark'
-      ? 'https://unpkg.com/highlight.js@11.10.0/styles/github-dark-dimmed.css'
-      : 'https://unpkg.com/highlight.js@11.10.0/styles/github.css';
-    document.head.appendChild(hljsLink);
+    applyTheme();
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === "dark" ? "light" : "dark");
+    if (!isLoading) {
+      setTheme(prev => prev === "dark" ? "light" : "dark");
+    }
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, isLoading }}>
       {children}
     </ThemeContext.Provider>
   );
