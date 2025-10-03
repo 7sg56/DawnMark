@@ -3,10 +3,11 @@
 :root {
   --bg: #ffffff;
   --fg: #111111; /* primary black-ish */
-  --accent: #e11d2f; /* restrained red */
+  --accent: #2563eb; /* blue */
   --muted: #6b7280; /* gray */
   --surface: #f7f7f7;
   --border: #e5e7eb;
+  --panel-border: #d0d7de; /* higher-contrast panel borders (light) */
   --header-h: 56px;
 }
 
@@ -16,6 +17,7 @@
     --fg: #f5f5f5;
     --surface: #111213;
     --border: #1f2937;
+    --panel-border: #30363d; /* higher-contrast panel borders (dark) */
   }
 }
 
@@ -38,10 +40,31 @@ body {
   min-height: var(--header-h);
 }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .2px; }
-.brand .logo { font-size: 20px; }
+.brand .logo { width: 28px; height: 28px; }
 .brand .name { font-size: 18px; }
-.author { color: var(--fg); text-decoration: none; border-bottom: 1px dotted transparent; }
-.author:hover { color: var(--fg); border-color: var(--accent); }
+
+/* Yellow square logo with fancy M */
+.logo-square {
+  width: 28px;
+  height: 28px;
+  background: #fbbf24;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.logo-m {
+  font-family: 'Times New Roman', serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: #1f2937;
+  font-style: italic;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.author { color: var(--accent); text-decoration: none; font-weight: 600; }
+.author:hover { color: var(--accent); text-decoration: underline; }
 
 .dm-container {
   display: grid;
@@ -58,8 +81,32 @@ body {
 }
 
 .left, .right { height: 100%; min-height: 0; overflow: hidden; }
-.left { border-right: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.left { border-right: 1px solid var(--panel-border); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.left > .panel { flex: 0 0 auto; }
+.left > .panel.grow { flex: 1 1 0; }
+
+/* Panel shell with header actions */
+.panel { border: 1px solid var(--panel-border); border-radius: 12px; background: var(--surface); display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.panel.grow { flex: 1 1 auto; min-height: 0; }
+.panel-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--panel-border); border-radius: 12px 12px 0 0; background: color-mix(in oklab, var(--bg) 85%, var(--surface)); }
+.panel-title { font-weight: 600; font-size: 13px; letter-spacing: .2px; }
+.panel-actions { display: inline-flex; gap: 8px; }
+.icon-btn { width: 32px; height: 32px; display: grid; place-items: center; background: transparent; border: 1px solid var(--panel-border); border-radius: 10px; color: var(--muted); cursor: pointer; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+.icon-btn svg { width: 16px; height: 16px; }
+.icon-btn:hover { background: color-mix(in oklab, var(--surface) 70%, transparent); border-color: var(--accent); color: var(--fg); }
+.icon-btn:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+.panel-body { padding: 10px; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+/* Ensure editor internals consume full height */
+.editor-body { display: flex; flex: 1 1 auto; min-height: 0; }
+.panel-body .editor-wrap { flex: 1 1 auto; min-height: 0; }
+.panel-body .preview { flex: 1 1 auto; min-height: 0; }
+
+/* Maximize overlay for a panel (cover viewport below header) */
+.panel-max { position: fixed; top: var(--header-h); left: 0; right: 0; bottom: 0; width: 100vw; height: calc(100dvh - var(--header-h)); z-index: 1000; margin: 0; border-radius: 0; }
+.panel-max .panel-header { border-radius: 0; }
+.panel-max .panel-body { height: calc(100% - 52px); overflow: auto; }
 .right { padding: 16px; display: flex; }
+.right > .panel { flex: 1 1 auto; min-height: 0; }
 
 .uploader { display: flex; flex-direction: column; gap: 10px; }
 .uploader-top { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
@@ -71,27 +118,39 @@ body {
 .button:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .dropzone {
-  border: 1px dashed var(--border); border-radius: 6px; min-height: 46px; display: grid; place-items: center;
-  color: var(--muted); cursor: pointer; background: var(--surface);
+  border: 2px dotted var(--panel-border); border-radius: 8px; min-height: 120px; display: grid; place-items: center;
+  color: var(--muted); cursor: pointer; background: var(--surface); padding: 12px;
+  max-height: 260px; overflow: auto;
 }
+/* Fix uploads panel height and keep internal scrolling */
+.panel.uploads { height: 240px; }
+.panel.uploads .panel-body { height: calc(100% - 52px); } /* 52px ≈ header */
+.panel.uploads .dropzone { height: 160px; }
 .dropzone:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 .dropzone.dragover { border-color: var(--accent); color: var(--fg); }
 
-.file-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
-.file-item { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: var(--bg); cursor: pointer; }
-.file-item:hover { border-color: var(--accent); }
-.file-name { display: block; font-size: 12px; word-break: break-all; }
-.file-meta { display: block; font-size: 11px; color: var(--muted); }
+.file-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; }
+.file-item { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); cursor: pointer; position: relative; overflow: hidden; aspect-ratio: 1 / 1; transition: border-color .15s ease, background-color .15s ease; }
+.file-item:hover { border-color: var(--accent); background: color-mix(in oklab, var(--surface) 70%, transparent); }
+.file-thumb { position: absolute; inset: 0; background: color-mix(in oklab, var(--surface) 80%, transparent); display: grid; place-items: center; }
+.file-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.file-glyph { font-size: 28px; opacity: 0.9; }
+.file-label { position: absolute; left: 6px; right: 6px; bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 4px 6px; background: color-mix(in oklab, #000 55%, transparent); color: #fff; border-radius: 6px; pointer-events: none; }
+.file-name { display: inline-block; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%; }
+.file-meta { display: inline-block; font-size: 10px; opacity: .85; }
 .hint { margin: 0; color: var(--muted); font-size: 12px; }
 
 .editor-wrap { flex: 1 1 auto; display: flex; min-height: 0; height: 100%; }
+.editor-gutter { width: 48px; padding: 12px 8px; border-right: 1px solid var(--panel-border); border-radius: 8px 0 0 8px; background: var(--bg); color: var(--muted); text-align: right; overflow: hidden; }
+.gutter-line { height: calc(1.6em); line-height: 1.6; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 14px; }
+.dropzone p { margin: 12px 0; color: var(--muted); }
 #editor {
-  width: 100%; height: 100%; flex: 1 1 auto; resize: none; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px;
+  width: 100%; height: 100%; flex: 1 1 auto; resize: none; border: none; border-left: none; border-radius: 0 8px 8px 0; padding: 12px 14px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 14px; line-height: 1.6; background: var(--surface);
 }
 #editor:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.preview { height: 100%; width: 100%; flex: 1 1 auto; min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow: auto; background: var(--surface); }
+.preview { height: 100%; width: 100%; flex: 1 1 auto; min-width: 0; border: none; border-radius: 8px; padding: 16px; overflow: auto; background: var(--surface); }
 .preview img { max-width: 100%; height: auto; }
 
 .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 8px 12px; border-radius: 999px; font-size: 12px; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
