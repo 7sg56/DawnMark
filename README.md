@@ -2,8 +2,6 @@
 
 A modern, professional Markdown editor built with Next.js 15 that provides real-time preview, file management, and mathematical expression support. DawnMark combines the simplicity of Markdown with powerful features for technical writing and documentation.
 
-## 🚀 [Live Demo](https://dawnmark.netlify.app)
-
 ![DawnMark Screenshot](public/assets/dawnmark-screenshot.png)
 
 > Experience DawnMark in action at [dawnmark.netlify.app](https://dawnmark.netlify.app)
