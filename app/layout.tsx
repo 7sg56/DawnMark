@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DawnMark — Markdown + Blob Attachments",
+  title: "DawnMark",
   description:
     "Minimal live Markdown editor with on-page file uploads using Blob URLs.",
 };
