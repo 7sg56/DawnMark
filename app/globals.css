@@ -164,6 +164,13 @@ body {
   overflow: hidden; /* lock container scroll */
 }
 
+/* Hide desktop editor on mobile */
+@media (max-width: 767px) {
+  .dm-container {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
   /* Keep 40/60 split on smaller widths per spec */
   .dm-container { grid-template-columns: 40vw 60vw; }
@@ -257,6 +264,216 @@ body {
 /* GitHub markdown themes are loaded dynamically by ThemeProvider */
 
 /* Ensure badges/images render inline like GitHub (override Tailwind preflight) */
+
+/* Mobile Coming Soon Styles */
+.mobile-coming-soon {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg) 0%, color-mix(in oklab, var(--bg) 95%, var(--accent)) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: var(--fg);
+}
+
+.mobile-content {
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.mobile-logo {
+  margin-bottom: 24px;
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+.mobile-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 16px 0 8px 0;
+  background: linear-gradient(135deg, var(--accent) 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.mobile-subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 20px 0;
+}
+
+.mobile-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0 0 28px 0;
+}
+
+.mobile-status {
+  margin: 24px 0;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: color-mix(in oklab, var(--surface) 80%, transparent);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #fbbf24;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.mobile-actions {
+  margin: 32px 0;
+}
+
+.mobile-suggestion {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.mobile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 160px;
+  justify-content: center;
+}
+
+.mobile-btn-primary {
+  background: var(--accent);
+  color: white;
+  border: 1px solid var(--accent);
+}
+
+.mobile-btn-primary:hover {
+  background: color-mix(in oklab, var(--accent) 90%, black);
+  transform: translateY(-1px);
+  text-decoration: none;
+  color: white;
+}
+
+.mobile-btn-secondary {
+  background: var(--surface);
+  color: var(--fg);
+  border: 1px solid var(--panel-border);
+}
+
+.mobile-btn-secondary:hover {
+  background: var(--bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.mobile-footer {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.mobile-footer p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.mobile-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.mobile-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Hide mobile page on larger screens */
+@media (min-width: 768px) {
+  .mobile-coming-soon {
+    display: none;
+  }
+}
+
+/* Loading screen */
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--panel-border);
+  border-top: 3px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
 .markdown-body img { display: inline-block; vertical-align: middle; }
 /* Keep badge rows horizontal inside paragraphs */
 .markdown-body p > img,
