@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dawnmark.netlify.app"),
-  title: "DawnMark - Professional Markdown Editor",
+  title: "DawnMark - Markdown Editor",
   description:
     "A modern, professional Markdown editor with live preview, file uploads, LaTeX math support, and theme switching. Built with Next.js.",
   keywords: ["markdown", "editor", "live preview", "latex", "math", "file upload", "dark mode"],
