@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 
 interface BlobEntry {
   id: string;
@@ -50,7 +50,7 @@ export default function UploadPanel({
   const dropzoneRef = useRef<HTMLDivElement | null>(null);
   const urlsRef = useRef<string[]>([]);
 
-  function handleFiles(list: FileList | null) {
+  const handleFiles = useCallback((list: FileList | null) => {
     if (!list || list.length === 0) return;
     const next: BlobEntry[] = [];
     for (let i = 0; i < list.length; i++) {
@@ -65,7 +65,7 @@ export default function UploadPanel({
       urlsRef.current.push(url);
     }
     onFilesChange([...next, ...files]);
-  }
+  }, [files, onFilesChange]);
 
   function openFileDialog() {
     fileInputRef.current?.click();
@@ -96,7 +96,7 @@ export default function UploadPanel({
       dz.removeEventListener("dragover", onDragOver);
       dz.removeEventListener("dragleave", onDragLeave);
     };
-  }, []);
+  }, [handleFiles]);
 
   // Cleanup URLs on unmount
   useEffect(() => {
