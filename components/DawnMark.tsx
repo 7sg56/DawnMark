@@ -34,7 +34,6 @@ export default function DawnMark() {
   const [text, setText] = useState<string>("");
   const [files, setFiles] = useState<BlobEntry[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const dropzoneRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const [toast, setToast] = useState<string>("");
 
@@ -90,50 +89,6 @@ export default function DawnMark() {
   }, []);
 
 
-  // File selection handler
-  function handleFiles(list: FileList | null) {
-    if (!list || list.length === 0) return;
-    const next: BlobEntry[] = [];
-    for (let i = 0; i < list.length; i++) {
-      const file = list[i]!;
-      const url = URL.createObjectURL(file);
-      next.push({
-        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
-        file,
-        url,
-        snippet: snippetFor(file, url),
-      });
-      urlsRef.current.push(url);
-    }
-    setFiles((prev) => [...next, ...prev]);
-  }
-
-  // Dropzone interactions
-  useEffect(() => {
-    const dz = dropzoneRef.current;
-    if (!dz) return;
-    const onDrop = (e: DragEvent) => {
-      e.preventDefault();
-      dz.classList.remove("dragover");
-      handleFiles(e.dataTransfer?.files ?? null);
-    };
-    const onDragOver = (e: DragEvent) => {
-      e.preventDefault();
-      dz.classList.add("dragover");
-    };
-    const onDragLeave = (e: DragEvent) => {
-      e.preventDefault();
-      dz.classList.remove("dragover");
-    };
-    dz.addEventListener("drop", onDrop);
-    dz.addEventListener("dragover", onDragOver);
-    dz.addEventListener("dragleave", onDragLeave);
-    return () => {
-      dz.removeEventListener("drop", onDrop);
-      dz.removeEventListener("dragover", onDragOver);
-      dz.removeEventListener("dragleave", onDragLeave);
-    };
-  }, []);
 
   // Track created object URLs and revoke on unmount only
   const urlsRef = useRef<string[]>([]);
