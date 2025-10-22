@@ -50,15 +50,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           ? 'https://unpkg.com/github-markdown-css@5/github-markdown-dark.css'
           : 'https://unpkg.com/github-markdown-css@5/github-markdown-light.css';
           
-        const hljsCSSUrl = theme === 'dark'
-          ? 'https://unpkg.com/highlight.js@11.10.0/styles/github-dark-dimmed.css'
-          : 'https://unpkg.com/highlight.js@11.10.0/styles/github.css';
+        // Note: We use custom highlight.js styles in globals.css instead of external CSS
+        // to avoid conflicts and have better control over the styling
         
-        // Load both stylesheets in parallel
-        await Promise.all([
-          loadCSS('github-markdown-css', githubCSSUrl),
-          loadCSS('highlightjs-css', hljsCSSUrl)
-        ]);
+        // Load only the GitHub markdown CSS
+        await loadCSS('github-markdown-css', githubCSSUrl);
         
         // Force a small delay to ensure CSS is fully applied
         await new Promise(resolve => setTimeout(resolve, 50));

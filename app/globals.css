@@ -298,14 +298,13 @@ body {
 
 /* Monaco Editor line numbers spacing */
 .monaco-editor-container .monaco-editor .margin {
-  background: var(--bg) !important;
-  border-right: 1px solid var(--border) !important;
-  width: 60px !important;
+  display: none !important;
+  width: 0 !important;
 }
 
 .monaco-editor-container .monaco-editor .margin-view-overlays {
-  background: var(--bg) !important;
-  width: 60px !important;
+  display: none !important;
+  width: 0 !important;
 }
 
 .monaco-editor-container .monaco-editor .line-numbers {
@@ -320,9 +319,9 @@ body {
 
 /* Monaco Editor content area spacing */
 .monaco-editor-container .monaco-editor .view-lines {
-  padding-left: 20px !important;
+  padding-left: 10px !important;
   padding-right: 16px !important;
-  margin-left: 60px !important;
+  margin-left: 0 !important;
 }
 
 .monaco-editor-container .monaco-editor .view-line {
@@ -331,7 +330,7 @@ body {
 
 /* Ensure proper spacing between line numbers and content */
 .monaco-editor-container .monaco-editor .lines-content {
-  margin-left: 60px !important;
+  margin-left: 0 !important;
 }
 
 /* Additional spacing fixes */
@@ -345,14 +344,15 @@ body {
 
 /* Force proper line number area width */
 .monaco-editor-container .monaco-editor .margin-view-overlays .line-numbers {
-  width: 60px !important;
-  min-width: 60px !important;
-  max-width: 60px !important;
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
 }
 
 /* Content area positioning */
 .monaco-editor-container .monaco-editor .view-overlays {
-  left: 60px !important;
+  left: 0 !important;
 }
 
 /* Custom Monaco theme for dark mode */
@@ -395,21 +395,152 @@ body {
 
 /* Highlight.js syntax highlighting styles */
 .hljs {
-  color: #24292f;
-  background: transparent;
+  color: #24292f !important;
+  background: transparent !important;
+}
+
+/* More specific targeting for preview panel */
+.preview .hljs,
+.markdown-body .hljs {
+  color: #24292f !important;
+  background: transparent !important;
+}
+
+/* Override GitHub markdown CSS for highlight.js in preview */
+.preview pre code.hljs,
+.markdown-body pre code.hljs {
+  color: #24292f !important;
+  background: transparent !important;
+}
+
+/* Force highlight.js styles to be visible - debug override */
+.preview span[class*="hljs-"],
+.markdown-body span[class*="hljs-"] {
+  display: inline !important;
+  color: inherit !important;
+}
+
+/* Specific overrides for each highlight.js class */
+.preview span.hljs-comment,
+.markdown-body span.hljs-comment {
+  color: #6a737d !important;
+  font-style: italic !important;
+}
+
+.preview span.hljs-keyword,
+.markdown-body span.hljs-keyword {
+  color: #d73a49 !important;
+  font-weight: bold !important;
+}
+
+.preview span.hljs-title,
+.markdown-body span.hljs-title {
+  color: #6f42c1 !important;
+  font-weight: bold !important;
+}
+
+.preview span.hljs-string,
+.markdown-body span.hljs-string {
+  color: #032f62 !important;
+}
+
+.preview span.hljs-literal,
+.markdown-body span.hljs-literal {
+  color: #005cc5 !important;
+}
+
+.preview span.hljs-attr,
+.markdown-body span.hljs-attr {
+  color: #22863a !important;
+}
+
+/* Comprehensive override for all highlight.js classes in preview */
+.preview .hljs-comment,
+.preview .hljs-quote,
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote {
+  color: #6a737d !important;
+  font-style: italic !important;
+}
+
+.preview .hljs-keyword,
+.preview .hljs-selector-tag,
+.preview .hljs-subst,
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-selector-tag,
+.markdown-body .hljs-subst {
+  color: #d73a49 !important;
+  font-weight: bold !important;
+}
+
+.preview .hljs-number,
+.preview .hljs-literal,
+.preview .hljs-variable,
+.preview .hljs-template-variable,
+.preview .hljs-tag .hljs-attr,
+.markdown-body .hljs-number,
+.markdown-body .hljs-literal,
+.markdown-body .hljs-variable,
+.markdown-body .hljs-template-variable,
+.markdown-body .hljs-tag .hljs-attr {
+  color: #005cc5 !important;
+}
+
+.preview .hljs-string,
+.preview .hljs-doctag,
+.markdown-body .hljs-string,
+.markdown-body .hljs-doctag {
+  color: #032f62 !important;
+}
+
+.preview .hljs-title,
+.preview .hljs-section,
+.preview .hljs-selector-id,
+.markdown-body .hljs-title,
+.markdown-body .hljs-section,
+.markdown-body .hljs-selector-id {
+  color: #6f42c1 !important;
+  font-weight: bold !important;
+}
+
+.preview .hljs-type,
+.preview .hljs-class .hljs-title,
+.markdown-body .hljs-type,
+.markdown-body .hljs-class .hljs-title {
+  color: #d73a49 !important;
+  font-weight: bold !important;
+}
+
+.preview .hljs-tag,
+.preview .hljs-name,
+.preview .hljs-attribute,
+.markdown-body .hljs-tag,
+.markdown-body .hljs-name,
+.markdown-body .hljs-attribute {
+  color: #22863a !important;
+  font-weight: normal !important;
 }
 
 .hljs-comment,
 .hljs-quote {
-  color: #6a737d;
-  font-style: italic;
+  color: #6a737d !important;
+  font-style: italic !important;
+}
+
+/* More specific targeting for preview panel */
+.preview .hljs-comment,
+.preview .hljs-quote,
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote {
+  color: #6a737d !important;
+  font-style: italic !important;
 }
 
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-subst {
-  color: #d73a49;
-  font-weight: bold;
+  color: #d73a49 !important;
+  font-weight: bold !important;
 }
 
 .hljs-number,
@@ -417,67 +548,67 @@ body {
 .hljs-variable,
 .hljs-template-variable,
 .hljs-tag .hljs-attr {
-  color: #005cc5;
+  color: #005cc5 !important;
 }
 
 .hljs-string,
 .hljs-doctag {
-  color: #032f62;
+  color: #032f62 !important;
 }
 
 .hljs-title,
 .hljs-section,
 .hljs-selector-id {
-  color: #6f42c1;
-  font-weight: bold;
+  color: #6f42c1 !important;
+  font-weight: bold !important;
 }
 
 .hljs-type,
 .hljs-class .hljs-title {
-  color: #d73a49;
-  font-weight: bold;
+  color: #d73a49 !important;
+  font-weight: bold !important;
 }
 
 .hljs-tag,
 .hljs-name,
 .hljs-attribute {
-  color: #22863a;
-  font-weight: normal;
+  color: #22863a !important;
+  font-weight: normal !important;
 }
 
 .hljs-regexp,
 .hljs-link {
-  color: #032f62;
+  color: #032f62 !important;
 }
 
 .hljs-symbol,
 .hljs-bullet {
-  color: #e36209;
+  color: #e36209 !important;
 }
 
 .hljs-built_in,
 .hljs-builtin-name {
-  color: #005cc5;
+  color: #005cc5 !important;
 }
 
 .hljs-meta {
-  color: #6a737d;
+  color: #6a737d !important;
 }
 
 .hljs-deletion {
-  background: #ffeef0;
+  background: #ffeef0 !important;
 }
 
 .hljs-addition {
-  background: #f0fff4;
+  background: #f0fff4 !important;
 }
 
 .hljs-emphasis {
-  font-style: italic;
+  font-style: italic !important;
 }
 
 .hljs-strong {
-  font-weight: bold;
+  font-weight: bold !important;
 }
 
 .markdown-body code {
@@ -510,21 +641,21 @@ html.dark .markdown-body code {
 
 /* Dark theme highlight.js syntax highlighting */
 html.dark .hljs {
-  color: #f0f6fc;
-  background: transparent;
+  color: #f0f6fc !important;
+  background: transparent !important;
 }
 
 html.dark .hljs-comment,
 html.dark .hljs-quote {
-  color: #8b949e;
-  font-style: italic;
+  color: #8b949e !important;
+  font-style: italic !important;
 }
 
 html.dark .hljs-keyword,
 html.dark .hljs-selector-tag,
 html.dark .hljs-subst {
-  color: #ff7b72;
-  font-weight: bold;
+  color: #ff7b72 !important;
+  font-weight: bold !important;
 }
 
 html.dark .hljs-number,
@@ -532,59 +663,178 @@ html.dark .hljs-literal,
 html.dark .hljs-variable,
 html.dark .hljs-template-variable,
 html.dark .hljs-tag .hljs-attr {
-  color: #79c0ff;
+  color: #79c0ff !important;
 }
 
 html.dark .hljs-string,
 html.dark .hljs-doctag {
-  color: #a5d6ff;
+  color: #a5d6ff !important;
 }
 
 html.dark .hljs-title,
 html.dark .hljs-section,
 html.dark .hljs-selector-id {
-  color: #d2a8ff;
-  font-weight: bold;
+  color: #d2a8ff !important;
+  font-weight: bold !important;
 }
 
 html.dark .hljs-type,
 html.dark .hljs-class .hljs-title {
-  color: #ff7b72;
-  font-weight: bold;
+  color: #ff7b72 !important;
+  font-weight: bold !important;
 }
 
 html.dark .hljs-tag,
 html.dark .hljs-name,
 html.dark .hljs-attribute {
-  color: #7ee787;
-  font-weight: normal;
+  color: #7ee787 !important;
+  font-weight: normal !important;
 }
 
 html.dark .hljs-regexp,
 html.dark .hljs-link {
-  color: #a5d6ff;
+  color: #a5d6ff !important;
 }
 
 html.dark .hljs-symbol,
 html.dark .hljs-bullet {
-  color: #ffa657;
+  color: #ffa657 !important;
 }
 
 html.dark .hljs-built_in,
 html.dark .hljs-builtin-name {
-  color: #79c0ff;
+  color: #79c0ff !important;
 }
 
 html.dark .hljs-meta {
-  color: #8b949e;
+  color: #8b949e !important;
 }
 
 html.dark .hljs-deletion {
-  background: #490202;
+  background: #490202 !important;
 }
 
 html.dark .hljs-addition {
-  background: #033a16;
+  background: #033a16 !important;
+}
+
+/* Dark theme overrides for preview panel */
+html.dark .preview .hljs,
+html.dark .markdown-body .hljs {
+  color: #f0f6fc !important;
+  background: transparent !important;
+}
+
+html.dark .preview pre code.hljs,
+html.dark .markdown-body pre code.hljs {
+  color: #f0f6fc !important;
+  background: transparent !important;
+}
+
+html.dark .preview .hljs-comment,
+html.dark .preview .hljs-quote,
+html.dark .markdown-body .hljs-comment,
+html.dark .markdown-body .hljs-quote {
+  color: #8b949e !important;
+  font-style: italic !important;
+}
+
+html.dark .preview .hljs-keyword,
+html.dark .preview .hljs-selector-tag,
+html.dark .preview .hljs-subst,
+html.dark .markdown-body .hljs-keyword,
+html.dark .markdown-body .hljs-selector-tag,
+html.dark .markdown-body .hljs-subst {
+  color: #ff7b72 !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview .hljs-number,
+html.dark .preview .hljs-literal,
+html.dark .preview .hljs-variable,
+html.dark .preview .hljs-template-variable,
+html.dark .preview .hljs-tag .hljs-attr,
+html.dark .markdown-body .hljs-number,
+html.dark .markdown-body .hljs-literal,
+html.dark .markdown-body .hljs-variable,
+html.dark .markdown-body .hljs-template-variable,
+html.dark .markdown-body .hljs-tag .hljs-attr {
+  color: #79c0ff !important;
+}
+
+html.dark .preview .hljs-string,
+html.dark .preview .hljs-doctag,
+html.dark .markdown-body .hljs-string,
+html.dark .markdown-body .hljs-doctag {
+  color: #a5d6ff !important;
+}
+
+html.dark .preview .hljs-title,
+html.dark .preview .hljs-section,
+html.dark .preview .hljs-selector-id,
+html.dark .markdown-body .hljs-title,
+html.dark .markdown-body .hljs-section,
+html.dark .markdown-body .hljs-selector-id {
+  color: #d2a8ff !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview .hljs-type,
+html.dark .preview .hljs-class .hljs-title,
+html.dark .markdown-body .hljs-type,
+html.dark .markdown-body .hljs-class .hljs-title {
+  color: #ff7b72 !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview .hljs-tag,
+html.dark .preview .hljs-name,
+html.dark .preview .hljs-attribute,
+html.dark .markdown-body .hljs-tag,
+html.dark .markdown-body .hljs-name,
+html.dark .markdown-body .hljs-attribute {
+  color: #7ee787 !important;
+  font-weight: normal !important;
+}
+
+/* Dark theme specific span overrides */
+html.dark .preview span[class*="hljs-"],
+html.dark .markdown-body span[class*="hljs-"] {
+  display: inline !important;
+  color: inherit !important;
+}
+
+html.dark .preview span.hljs-comment,
+html.dark .markdown-body span.hljs-comment {
+  color: #8b949e !important;
+  font-style: italic !important;
+}
+
+html.dark .preview span.hljs-keyword,
+html.dark .markdown-body span.hljs-keyword {
+  color: #ff7b72 !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview span.hljs-title,
+html.dark .markdown-body span.hljs-title {
+  color: #d2a8ff !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview span.hljs-string,
+html.dark .markdown-body span.hljs-string {
+  color: #a5d6ff !important;
+}
+
+html.dark .preview span.hljs-literal,
+html.dark .markdown-body span.hljs-literal {
+  color: #79c0ff !important;
+}
+
+html.dark .preview span.hljs-attr,
+html.dark .markdown-body span.hljs-attr {
+  color: #7ee787 !important;
 }
 
 .preview { height: 100%; width: 100%; flex: 1 1 auto; min-width: 0; border: none; border-radius: 8px; padding: 16px; overflow: auto; background: var(--surface); }

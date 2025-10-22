@@ -2,23 +2,19 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { Editor } from "@monaco-editor/react";
-import dynamic from "next/dynamic";
 
 interface MonacoEditorProps {
   value: string;
   onChange: (value: string) => void;
-  placeholder?: string;
   className?: string;
-  onScroll?: (e: React.UIEvent<HTMLTextAreaElement>) => void;
 }
 
 export default function MonacoEditor({
   value,
   onChange,
-  placeholder,
-  className = "",
-  onScroll
+  className = ""
 }: MonacoEditorProps) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editorRef = useRef<any>(null);
   const [theme, setTheme] = useState('vs-dark');
   const [isClient, setIsClient] = useState(false);
@@ -50,6 +46,7 @@ export default function MonacoEditor({
     return () => observer.disconnect();
   }, [isClient]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
     
@@ -62,8 +59,9 @@ export default function MonacoEditor({
       glyphMargin: false,
       folding: false,
       lineDecorationsWidth: 0,
+      lineNumbersMinChars: 0,
       renderLineHighlight: 'none',
-      selectOnLineNumbers: true,
+      selectOnLineNumbers: false,
       roundedSelection: false,
       readOnly: false,
       cursorStyle: 'line',
@@ -71,7 +69,7 @@ export default function MonacoEditor({
       fontSize: 14,
       fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
       lineHeight: 24,
-      padding: { top: 16, bottom: 16, left: 16, right: 16 },
+      padding: { top: 16, bottom: 16 },
       scrollbar: {
         vertical: 'auto',
         horizontal: 'auto',
@@ -90,19 +88,6 @@ export default function MonacoEditor({
     }
   };
 
-  const handleEditorScroll = () => {
-    if (onScroll && editorRef.current) {
-      // Create a synthetic event for scroll
-      const syntheticEvent = {
-        currentTarget: {
-          scrollTop: editorRef.current.getScrollTop(),
-          scrollLeft: editorRef.current.getScrollLeft(),
-        }
-      } as React.UIEvent<HTMLTextAreaElement>;
-      
-      onScroll(syntheticEvent);
-    }
-  };
 
   // Show loading state during SSR
   if (!isClient) {
@@ -133,9 +118,9 @@ export default function MonacoEditor({
           glyphMargin: false,
           folding: false,
           lineDecorationsWidth: 0,
-          lineNumbersMinChars: 3,
+          lineNumbersMinChars: 0,
           renderLineHighlight: 'none',
-          selectOnLineNumbers: true,
+          selectOnLineNumbers: false,
           roundedSelection: false,
           readOnly: false,
           cursorStyle: 'line',
@@ -143,7 +128,7 @@ export default function MonacoEditor({
           fontSize: 14,
           fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
           lineHeight: 24,
-          padding: { top: 16, bottom: 16, left: 12, right: 16 },
+          padding: { top: 16, bottom: 16 },
           scrollbar: {
             vertical: 'auto',
             horizontal: 'auto',

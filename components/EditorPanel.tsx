@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import MonacoEditor from "./MonacoEditor";
 
 interface EditorPanelProps {
@@ -26,7 +26,6 @@ export default function EditorPanel({
   maxPanel,
   onToggleMax
 }: EditorPanelProps) {
-  const gutterRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div className={`panel grow ${maxPanel === "editor" ? "panel-max" : ""}`}>
@@ -57,7 +56,6 @@ export default function EditorPanel({
         <MonacoEditor
           value={text}
           onChange={onTextChange}
-          placeholder="Start typing to replace the welcome content..."
           className="monaco-editor-wrapper"
         />
       </div>

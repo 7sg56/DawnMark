@@ -16,7 +16,6 @@ interface UploadPanelProps {
   onCopyAllSnippets: () => void;
   onDownloadSnippets: () => void;
   maxPanel: string | null;
-  onToggleMax: (panel: "uploads" | "editor" | "preview") => void;
 }
 
 function formatBytes(bytes: number) {
@@ -43,8 +42,7 @@ export default function UploadPanel({
   onCopySnippet,
   onCopyAllSnippets,
   onDownloadSnippets,
-  maxPanel,
-  onToggleMax
+  maxPanel
 }: UploadPanelProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const dropzoneRef = useRef<HTMLDivElement | null>(null);
