@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
+import MonacoEditor from "./MonacoEditor";
 
 interface EditorPanelProps {
   text: string;
@@ -25,7 +26,6 @@ export default function EditorPanel({
   maxPanel,
   onToggleMax
 }: EditorPanelProps) {
-  const gutterRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div className={`panel grow ${maxPanel === "editor" ? "panel-max" : ""}`}>
@@ -53,21 +53,11 @@ export default function EditorPanel({
         </div>
       </div>
       <div className="panel-body editor-body">
-        <div className="editor-wrap" role="group" aria-label="Markdown editor with line numbers">
-          <div className="editor-gutter" aria-hidden="true" ref={gutterRef}>
-            {Array.from({ length: Math.max(1, text.split("\n").length) }, (_, i) => (
-              <div key={i} className="gutter-line">{i + 1}</div>
-            ))}
-          </div>
-          <textarea
-            id="editor"
-            placeholder="Start typing to replace the welcome content..."
-            value={text}
-            onChange={(e) => onTextChange(e.currentTarget.value)}
-            onScroll={(e) => { if (gutterRef.current) gutterRef.current.scrollTop = e.currentTarget.scrollTop; }}
-            aria-label="Markdown editor"
-          />
-        </div>
+        <MonacoEditor
+          value={text}
+          onChange={onTextChange}
+          className="monaco-editor-wrapper"
+        />
       </div>
     </div>
   );

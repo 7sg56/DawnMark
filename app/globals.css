@@ -255,6 +255,588 @@ body {
 }
 #editor:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* Monaco Editor Styles */
+.monaco-editor-container {
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: 0 8px 8px 0;
+  overflow: hidden;
+}
+
+.monaco-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--surface);
+  border-radius: 0 8px 8px 0;
+}
+
+.loading-text {
+  color: var(--muted);
+  font-size: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.monaco-editor-wrapper {
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Monaco Editor theme overrides */
+.monaco-editor-container .monaco-editor {
+  border-radius: 0 8px 8px 0;
+}
+
+.monaco-editor-container .monaco-editor .view-lines {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+/* Monaco Editor line numbers spacing */
+.monaco-editor-container .monaco-editor .margin {
+  display: none !important;
+  width: 0 !important;
+}
+
+.monaco-editor-container .monaco-editor .margin-view-overlays {
+  display: none !important;
+  width: 0 !important;
+}
+
+.monaco-editor-container .monaco-editor .line-numbers {
+  color: var(--muted) !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  font-size: 14px !important;
+  line-height: 24px !important;
+  padding-right: 16px !important;
+  text-align: right !important;
+  width: 60px !important;
+}
+
+/* Monaco Editor content area spacing */
+.monaco-editor-container .monaco-editor .view-lines {
+  padding-left: 10px !important;
+  padding-right: 16px !important;
+  margin-left: 0 !important;
+}
+
+.monaco-editor-container .monaco-editor .view-line {
+  padding-left: 0 !important;
+}
+
+/* Ensure proper spacing between line numbers and content */
+.monaco-editor-container .monaco-editor .lines-content {
+  margin-left: 0 !important;
+}
+
+/* Additional spacing fixes */
+.monaco-editor-container .monaco-editor .overflow-guard {
+  overflow: hidden !important;
+}
+
+.monaco-editor-container .monaco-editor .monaco-editor-background {
+  background: var(--surface) !important;
+}
+
+/* Force proper line number area width */
+.monaco-editor-container .monaco-editor .margin-view-overlays .line-numbers {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+}
+
+/* Content area positioning */
+.monaco-editor-container .monaco-editor .view-overlays {
+  left: 0 !important;
+}
+
+/* Custom Monaco theme for dark mode */
+.monaco-editor-container .monaco-editor.vs-dark {
+  --vscode-editor-background: var(--surface);
+  --vscode-editor-foreground: var(--fg);
+  --vscode-editorLineNumber-foreground: var(--muted);
+  --vscode-editorLineNumber-activeForeground: var(--fg);
+  --vscode-editor-selectionBackground: rgba(37, 99, 235, 0.3);
+  --vscode-editor-selectionHighlightBackground: rgba(37, 99, 235, 0.1);
+  --vscode-editorCursor-foreground: var(--fg);
+  --vscode-editorWhitespace-foreground: var(--muted);
+  --vscode-editorIndentGuide-background: var(--border);
+  --vscode-editorIndentGuide-activeBackground: var(--muted);
+}
+
+/* Custom Monaco theme for light mode */
+.monaco-editor-container .monaco-editor.vs {
+  --vscode-editor-background: var(--surface);
+  --vscode-editor-foreground: var(--fg);
+  --vscode-editorLineNumber-foreground: var(--muted);
+  --vscode-editorLineNumber-activeForeground: var(--fg);
+  --vscode-editor-selectionBackground: rgba(37, 99, 235, 0.3);
+  --vscode-editor-selectionHighlightBackground: rgba(37, 99, 235, 0.1);
+  --vscode-editorCursor-foreground: var(--fg);
+  --vscode-editorWhitespace-foreground: var(--muted);
+  --vscode-editorIndentGuide-background: var(--border);
+  --vscode-editorIndentGuide-activeBackground: var(--muted);
+}
+
+/* Highlight.js code block styling */
+.markdown-body pre {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+  overflow-x: auto !important;
+  margin: 16px 0 !important;
+}
+
+/* Highlight.js syntax highlighting styles */
+.hljs {
+  color: #24292f !important;
+  background: transparent !important;
+}
+
+/* More specific targeting for preview panel */
+.preview .hljs,
+.markdown-body .hljs {
+  color: #24292f !important;
+  background: transparent !important;
+}
+
+/* Override GitHub markdown CSS for highlight.js in preview */
+.preview pre code.hljs,
+.markdown-body pre code.hljs {
+  color: #24292f !important;
+  background: transparent !important;
+}
+
+/* Force highlight.js styles to be visible - debug override */
+.preview span[class*="hljs-"],
+.markdown-body span[class*="hljs-"] {
+  display: inline !important;
+  color: inherit !important;
+}
+
+/* Specific overrides for each highlight.js class */
+.preview span.hljs-comment,
+.markdown-body span.hljs-comment {
+  color: #6a737d !important;
+  font-style: italic !important;
+}
+
+.preview span.hljs-keyword,
+.markdown-body span.hljs-keyword {
+  color: #d73a49 !important;
+  font-weight: bold !important;
+}
+
+.preview span.hljs-title,
+.markdown-body span.hljs-title {
+  color: #6f42c1 !important;
+  font-weight: bold !important;
+}
+
+.preview span.hljs-string,
+.markdown-body span.hljs-string {
+  color: #032f62 !important;
+}
+
+.preview span.hljs-literal,
+.markdown-body span.hljs-literal {
+  color: #005cc5 !important;
+}
+
+.preview span.hljs-attr,
+.markdown-body span.hljs-attr {
+  color: #22863a !important;
+}
+
+/* Comprehensive override for all highlight.js classes in preview */
+.preview .hljs-comment,
+.preview .hljs-quote,
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote {
+  color: #6a737d !important;
+  font-style: italic !important;
+}
+
+.preview .hljs-keyword,
+.preview .hljs-selector-tag,
+.preview .hljs-subst,
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-selector-tag,
+.markdown-body .hljs-subst {
+  color: #d73a49 !important;
+  font-weight: bold !important;
+}
+
+.preview .hljs-number,
+.preview .hljs-literal,
+.preview .hljs-variable,
+.preview .hljs-template-variable,
+.preview .hljs-tag .hljs-attr,
+.markdown-body .hljs-number,
+.markdown-body .hljs-literal,
+.markdown-body .hljs-variable,
+.markdown-body .hljs-template-variable,
+.markdown-body .hljs-tag .hljs-attr {
+  color: #005cc5 !important;
+}
+
+.preview .hljs-string,
+.preview .hljs-doctag,
+.markdown-body .hljs-string,
+.markdown-body .hljs-doctag {
+  color: #032f62 !important;
+}
+
+.preview .hljs-title,
+.preview .hljs-section,
+.preview .hljs-selector-id,
+.markdown-body .hljs-title,
+.markdown-body .hljs-section,
+.markdown-body .hljs-selector-id {
+  color: #6f42c1 !important;
+  font-weight: bold !important;
+}
+
+.preview .hljs-type,
+.preview .hljs-class .hljs-title,
+.markdown-body .hljs-type,
+.markdown-body .hljs-class .hljs-title {
+  color: #d73a49 !important;
+  font-weight: bold !important;
+}
+
+.preview .hljs-tag,
+.preview .hljs-name,
+.preview .hljs-attribute,
+.markdown-body .hljs-tag,
+.markdown-body .hljs-name,
+.markdown-body .hljs-attribute {
+  color: #22863a !important;
+  font-weight: normal !important;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6a737d !important;
+  font-style: italic !important;
+}
+
+/* More specific targeting for preview panel */
+.preview .hljs-comment,
+.preview .hljs-quote,
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote {
+  color: #6a737d !important;
+  font-style: italic !important;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #d73a49 !important;
+  font-weight: bold !important;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #005cc5 !important;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #032f62 !important;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #6f42c1 !important;
+  font-weight: bold !important;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #d73a49 !important;
+  font-weight: bold !important;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #22863a !important;
+  font-weight: normal !important;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #032f62 !important;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #e36209 !important;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #005cc5 !important;
+}
+
+.hljs-meta {
+  color: #6a737d !important;
+}
+
+.hljs-deletion {
+  background: #ffeef0 !important;
+}
+
+.hljs-addition {
+  background: #f0fff4 !important;
+}
+
+.hljs-emphasis {
+  font-style: italic !important;
+}
+
+.hljs-strong {
+  font-weight: bold !important;
+}
+
+.markdown-body code {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+  font-size: 0.9em !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+.markdown-body pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+}
+
+/* Dark theme highlight.js overrides */
+html.dark .markdown-body pre {
+  background: #0d1117 !important;
+  border-color: #30363d !important;
+}
+
+html.dark .markdown-body code {
+  background: #161b22 !important;
+  border-color: #30363d !important;
+  color: #f0f6fc !important;
+}
+
+/* Dark theme highlight.js syntax highlighting */
+html.dark .hljs {
+  color: #f0f6fc !important;
+  background: transparent !important;
+}
+
+html.dark .hljs-comment,
+html.dark .hljs-quote {
+  color: #8b949e !important;
+  font-style: italic !important;
+}
+
+html.dark .hljs-keyword,
+html.dark .hljs-selector-tag,
+html.dark .hljs-subst {
+  color: #ff7b72 !important;
+  font-weight: bold !important;
+}
+
+html.dark .hljs-number,
+html.dark .hljs-literal,
+html.dark .hljs-variable,
+html.dark .hljs-template-variable,
+html.dark .hljs-tag .hljs-attr {
+  color: #79c0ff !important;
+}
+
+html.dark .hljs-string,
+html.dark .hljs-doctag {
+  color: #a5d6ff !important;
+}
+
+html.dark .hljs-title,
+html.dark .hljs-section,
+html.dark .hljs-selector-id {
+  color: #d2a8ff !important;
+  font-weight: bold !important;
+}
+
+html.dark .hljs-type,
+html.dark .hljs-class .hljs-title {
+  color: #ff7b72 !important;
+  font-weight: bold !important;
+}
+
+html.dark .hljs-tag,
+html.dark .hljs-name,
+html.dark .hljs-attribute {
+  color: #7ee787 !important;
+  font-weight: normal !important;
+}
+
+html.dark .hljs-regexp,
+html.dark .hljs-link {
+  color: #a5d6ff !important;
+}
+
+html.dark .hljs-symbol,
+html.dark .hljs-bullet {
+  color: #ffa657 !important;
+}
+
+html.dark .hljs-built_in,
+html.dark .hljs-builtin-name {
+  color: #79c0ff !important;
+}
+
+html.dark .hljs-meta {
+  color: #8b949e !important;
+}
+
+html.dark .hljs-deletion {
+  background: #490202 !important;
+}
+
+html.dark .hljs-addition {
+  background: #033a16 !important;
+}
+
+/* Dark theme overrides for preview panel */
+html.dark .preview .hljs,
+html.dark .markdown-body .hljs {
+  color: #f0f6fc !important;
+  background: transparent !important;
+}
+
+html.dark .preview pre code.hljs,
+html.dark .markdown-body pre code.hljs {
+  color: #f0f6fc !important;
+  background: transparent !important;
+}
+
+html.dark .preview .hljs-comment,
+html.dark .preview .hljs-quote,
+html.dark .markdown-body .hljs-comment,
+html.dark .markdown-body .hljs-quote {
+  color: #8b949e !important;
+  font-style: italic !important;
+}
+
+html.dark .preview .hljs-keyword,
+html.dark .preview .hljs-selector-tag,
+html.dark .preview .hljs-subst,
+html.dark .markdown-body .hljs-keyword,
+html.dark .markdown-body .hljs-selector-tag,
+html.dark .markdown-body .hljs-subst {
+  color: #ff7b72 !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview .hljs-number,
+html.dark .preview .hljs-literal,
+html.dark .preview .hljs-variable,
+html.dark .preview .hljs-template-variable,
+html.dark .preview .hljs-tag .hljs-attr,
+html.dark .markdown-body .hljs-number,
+html.dark .markdown-body .hljs-literal,
+html.dark .markdown-body .hljs-variable,
+html.dark .markdown-body .hljs-template-variable,
+html.dark .markdown-body .hljs-tag .hljs-attr {
+  color: #79c0ff !important;
+}
+
+html.dark .preview .hljs-string,
+html.dark .preview .hljs-doctag,
+html.dark .markdown-body .hljs-string,
+html.dark .markdown-body .hljs-doctag {
+  color: #a5d6ff !important;
+}
+
+html.dark .preview .hljs-title,
+html.dark .preview .hljs-section,
+html.dark .preview .hljs-selector-id,
+html.dark .markdown-body .hljs-title,
+html.dark .markdown-body .hljs-section,
+html.dark .markdown-body .hljs-selector-id {
+  color: #d2a8ff !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview .hljs-type,
+html.dark .preview .hljs-class .hljs-title,
+html.dark .markdown-body .hljs-type,
+html.dark .markdown-body .hljs-class .hljs-title {
+  color: #ff7b72 !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview .hljs-tag,
+html.dark .preview .hljs-name,
+html.dark .preview .hljs-attribute,
+html.dark .markdown-body .hljs-tag,
+html.dark .markdown-body .hljs-name,
+html.dark .markdown-body .hljs-attribute {
+  color: #7ee787 !important;
+  font-weight: normal !important;
+}
+
+/* Dark theme specific span overrides */
+html.dark .preview span[class*="hljs-"],
+html.dark .markdown-body span[class*="hljs-"] {
+  display: inline !important;
+  color: inherit !important;
+}
+
+html.dark .preview span.hljs-comment,
+html.dark .markdown-body span.hljs-comment {
+  color: #8b949e !important;
+  font-style: italic !important;
+}
+
+html.dark .preview span.hljs-keyword,
+html.dark .markdown-body span.hljs-keyword {
+  color: #ff7b72 !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview span.hljs-title,
+html.dark .markdown-body span.hljs-title {
+  color: #d2a8ff !important;
+  font-weight: bold !important;
+}
+
+html.dark .preview span.hljs-string,
+html.dark .markdown-body span.hljs-string {
+  color: #a5d6ff !important;
+}
+
+html.dark .preview span.hljs-literal,
+html.dark .markdown-body span.hljs-literal {
+  color: #79c0ff !important;
+}
+
+html.dark .preview span.hljs-attr,
+html.dark .markdown-body span.hljs-attr {
+  color: #7ee787 !important;
+}
+
 .preview { height: 100%; width: 100%; flex: 1 1 auto; min-width: 0; border: none; border-radius: 8px; padding: 16px; overflow: auto; background: var(--surface); }
 .preview img { max-width: 100%; height: auto; }
 

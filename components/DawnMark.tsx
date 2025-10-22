@@ -3,8 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import { markedHighlight } from "marked-highlight";
-import hljs from "highlight.js";
 // @ts-expect-error - KaTeX auto-render doesn't have proper TypeScript types
 import renderMathInElement from "katex/dist/contrib/auto-render";
 import UploadPanel from "./UploadPanel";
@@ -12,15 +10,7 @@ import EditorPanel from "./EditorPanel";
 import PreviewPanel from "./PreviewPanel";
 
 
-function isImage(file: File) {
-  return file.type.startsWith("image/");
-}
 
-function snippetFor(file: File, url: string) {
-  const safeName = file.name.replace(/\]/g, ")");
-  if (isImage(file)) return `![${safeName}](${url})`;
-  return `[${safeName}](${url})`;
-}
 
 interface BlobEntry {
   id: string;
@@ -37,18 +27,9 @@ export default function DawnMark() {
   const previewRef = useRef<HTMLDivElement | null>(null);
   const [toast, setToast] = useState<string>("");
 
-  // Configure global marked instance once (GFM, breaks, highlight.js)
+  // Configure global marked instance once (GFM, breaks, no syntax highlighting)
   const markedConfiguredRef = useRef(false);
   if (!markedConfiguredRef.current) {
-    marked.use(
-      markedHighlight({
-        langPrefix: "hljs language-",
-        highlight(code, lang) {
-          const language = hljs.getLanguage(lang) ? lang : "plaintext";
-          return hljs.highlight(code, { language }).value;
-        },
-      })
-    );
     marked.use({ gfm: true, breaks: false });
     markedConfiguredRef.current = true;
   }
@@ -61,6 +42,9 @@ export default function DawnMark() {
     const safe = DOMPurify.sanitize(html, {
       USE_PROFILES: { html: true },
       ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel|ftp|data|blob):|[^a-z]|[a-z+.-]+(?:[^a-z+.-]|$))/i,
+      ALLOWED_TAGS: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'u', 's', 'del', 'ins', 'mark', 'small', 'sub', 'sup', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'a', 'img', 'br', 'hr', 'span', 'div'],
+      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'style', 'target', 'rel', 'data-*'],
+      ALLOW_DATA_ATTR: true
     });
     previewRef.current.innerHTML = safe;
     
@@ -193,7 +177,6 @@ export default function DawnMark() {
           onCopyAllSnippets={copyAllSnippets}
           onDownloadSnippets={downloadSnippets}
           maxPanel={maxPanel}
-          onToggleMax={toggleMax}
         />
         
         <EditorPanel
