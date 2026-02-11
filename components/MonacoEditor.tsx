@@ -21,6 +21,7 @@ export default function MonacoEditor({
 
   // Check if we're on the client side
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true);
   }, []);
 
