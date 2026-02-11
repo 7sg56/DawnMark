@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-// @ts-expect-error - KaTeX auto-render doesn't have proper TypeScript types
 import renderMathInElement from "katex/dist/contrib/auto-render";
 import UploadPanel from "./UploadPanel";
 import EditorPanel from "./EditorPanel";
