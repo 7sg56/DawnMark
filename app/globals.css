@@ -413,13 +413,6 @@ body {
   background: transparent !important;
 }
 
-/* Force highlight.js styles to be visible - debug override */
-.preview span[class*="hljs-"],
-.markdown-body span[class*="hljs-"] {
-  display: inline !important;
-  color: inherit !important;
-}
-
 /* Specific overrides for each highlight.js class */
 .preview span.hljs-comment,
 .markdown-body span.hljs-comment {
