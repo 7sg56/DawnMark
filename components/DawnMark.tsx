@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
-import { marked } from "marked";
+import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
 // @ts-expect-error - KaTeX auto-render doesn't have proper TypeScript types
@@ -11,23 +11,17 @@ import UploadPanel from "./UploadPanel";
 import EditorPanel from "./EditorPanel";
 import PreviewPanel from "./PreviewPanel";
 
-// Configure global marked instance once (GFM, breaks, syntax highlighting)
-// Use globalThis to prevent double-configuration during HMR
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-if (!(globalThis as any).markedConfigured) {
-  marked.use(
-    markedHighlight({
-      langPrefix: 'hljs language-',
-      highlight(code, lang) {
-        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-        return hljs.highlight(code, { language }).value;
-      }
-    })
-  );
-  marked.use({ gfm: true, breaks: false });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any).markedConfigured = true;
-}
+const marked = new Marked(
+  markedHighlight({
+    langPrefix: 'hljs language-',
+    highlight(code, lang) {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      return hljs.highlight(code, { language }).value;
+    }
+  })
+);
+
+marked.use({ gfm: true, breaks: false });
 
 
 interface BlobEntry {
