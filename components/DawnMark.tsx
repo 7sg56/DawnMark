@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import renderMathInElement from "katex/dist/contrib/auto-render";
+import renderMathInElement from "./katex-auto-render";
 import UploadPanel from "./UploadPanel";
 import EditorPanel from "./EditorPanel";
 import PreviewPanel from "./PreviewPanel";
