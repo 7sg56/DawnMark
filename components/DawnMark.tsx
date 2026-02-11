@@ -28,11 +28,9 @@ export default function DawnMark() {
   const [toast, setToast] = useState<string>("");
 
   // Configure global marked instance once (GFM, breaks, no syntax highlighting)
-  const markedConfiguredRef = useRef(false);
-  if (!markedConfiguredRef.current) {
+  useEffect(() => {
     marked.use({ gfm: true, breaks: false });
-    markedConfiguredRef.current = true;
-  }
+  }, []);
 
 
   // Render markdown -> preview with KaTeX auto-render
@@ -74,14 +72,6 @@ export default function DawnMark() {
 
 
 
-  // Track created object URLs and revoke on unmount only
-  const urlsRef = useRef<string[]>([]);
-
-  useEffect(() => {
-    return () => {
-      urlsRef.current.forEach((u) => URL.revokeObjectURL(u));
-    };
-  }, []);
 
   function openFileDialog() {
     fileInputRef.current?.click();
