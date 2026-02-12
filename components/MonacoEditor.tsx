@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Editor } from "@monaco-editor/react";
+import { Editor, OnMount } from "@monaco-editor/react";
 
 interface MonacoEditorProps {
   value: string;
@@ -45,8 +45,7 @@ export default function MonacoEditor({
     return () => observer.disconnect();
   }, [isClient]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleEditorDidMount = (editor: any) => {
+  const handleEditorDidMount: OnMount = (editor) => {
     // Configure editor options
     editor.updateOptions({
       minimap: { enabled: false },
