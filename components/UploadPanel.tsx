@@ -16,6 +16,7 @@ interface UploadPanelProps {
   onCopySnippet: (snippet: string) => void;
   onCopyAllSnippets: () => void;
   onDownloadSnippets: () => void;
+  onDeleteFile: (id: string) => void;
   maxPanel: string | null;
 }
 
@@ -43,6 +44,7 @@ const UploadPanel = React.memo(({
   onCopySnippet,
   onCopyAllSnippets,
   onDownloadSnippets,
+  onDeleteFile,
   maxPanel
 }: UploadPanelProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -111,13 +113,13 @@ const UploadPanel = React.memo(({
         <div className="panel-title">Uploads</div>
         <div className="panel-actions">
           <button className="icon-btn" title="Upload files" aria-label="Upload files" onClick={openFileDialog}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 5 17 10"/><line x1="12" y1="5" x2="12" y2="21"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 5 17 10" /><line x1="12" y1="5" x2="12" y2="21" /></svg>
           </button>
           <button className="icon-btn" title="Copy all snippets" aria-label="Copy all snippets" onClick={onCopyAllSnippets}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
           </button>
           <button className="icon-btn" title="Download snippets" aria-label="Download snippets" onClick={onDownloadSnippets}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
           </button>
         </div>
       </div>
@@ -136,26 +138,34 @@ const UploadPanel = React.memo(({
             <p>Drop files here or click to browse</p>
           ) : (
             <ul className="file-list" aria-live="polite">
-            {files.map((f) => (
-              <li
-                key={f.id}
-                className="file-item"
-                title="Click to copy Markdown"
-                onClick={() => onCopySnippet(f.snippet)}
-              >
-                <div className="file-thumb" aria-hidden="true">
-                  {isImage(f.file) ? (
-                    <Image src={f.url} alt="" fill unoptimized className="object-cover" />
-                  ) : (
-                    <div className="file-glyph">📄</div>
-                  )}
-                </div>
-                <div className="file-label">
-                  <span className="file-name">{f.file.name}</span>
-                  <span className="file-meta">{formatBytes(f.file.size)}</span>
-                </div>
-              </li>
-            ))}
+              {files.map((f) => (
+                <li
+                  key={f.id}
+                  className="file-item"
+                  title="Click to copy Markdown"
+                  onClick={() => onCopySnippet(f.snippet)}
+                >
+                  <div className="file-thumb" aria-hidden="true">
+                    {isImage(f.file) ? (
+                      <Image src={f.url} alt="" fill unoptimized className="object-cover" />
+                    ) : (
+                      <div className="file-glyph">📄</div>
+                    )}
+                  </div>
+                  <div className="file-label">
+                    <span className="file-name">{f.file.name}</span>
+                    <span className="file-meta">{formatBytes(f.file.size)}</span>
+                  </div>
+                  <button
+                    className="file-delete-btn"
+                    title="Delete file"
+                    aria-label={`Delete ${f.file.name}`}
+                    onClick={(e) => { e.stopPropagation(); onDeleteFile(f.id); }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </li>
+              ))}
             </ul>
           )}
         </div>

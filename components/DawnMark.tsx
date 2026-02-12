@@ -75,15 +75,15 @@ export default function DawnMark() {
       ALLOW_DATA_ATTR: true
     });
     previewRef.current.innerHTML = safe;
-    
+
     // Render math with KaTeX auto-render
     try {
       renderMathInElement(previewRef.current, {
         delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false },
+          { left: '\\[', right: '\\]', display: true }
         ],
         throwOnError: false
       });
@@ -169,6 +169,16 @@ export default function DawnMark() {
     download("preview.html", html, "text/html");
   }, []);
 
+  const handleDeleteFile = useCallback((id: string) => {
+    setFiles(prev => {
+      const file = prev.find(f => f.id === id);
+      if (file) {
+        URL.revokeObjectURL(file.url);
+      }
+      return prev.filter(f => f.id !== id);
+    });
+  }, []);
+
   return (
     <>
       <section className="left">
@@ -178,9 +188,10 @@ export default function DawnMark() {
           onCopySnippet={copySnippet}
           onCopyAllSnippets={copyAllSnippets}
           onDownloadSnippets={downloadSnippets}
+          onDeleteFile={handleDeleteFile}
           maxPanel={maxPanel}
         />
-        
+
         <EditorPanel
           text={text}
           onTextChange={setText}
@@ -203,7 +214,7 @@ export default function DawnMark() {
           onToggleMax={toggleMax}
         />
       </section>
-      
+
       <div className={`toast ${toast ? "show" : ""}`} role="status" aria-live="polite" aria-atomic="true">
         {toast}
       </div>
