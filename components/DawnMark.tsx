@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
@@ -32,12 +32,30 @@ interface BlobEntry {
 }
 
 
+function download(filename: string, content: string, type = "text/plain") {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export default function DawnMark() {
   const [text, setText] = useState<string>("");
   const [files, setFiles] = useState<BlobEntry[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const [toast, setToast] = useState<string>("");
+
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    const id = setTimeout(() => setToast(""), 1200);
+    return () => clearTimeout(id);
+  }, []);
 
   // Configure global marked instance once (GFM, breaks, no syntax highlighting)
   useEffect(() => {
@@ -85,60 +103,48 @@ export default function DawnMark() {
 
 
 
-  function openFileDialog() {
+  const openFileDialog = useCallback(() => {
     fileInputRef.current?.click();
-  }
+  }, []);
 
   const [maxPanel, setMaxPanel] = useState<null | "uploads" | "editor" | "preview">(null);
-  function toggleMax(panel: "uploads" | "editor" | "preview") {
+  const toggleMax = useCallback((panel: "uploads" | "editor" | "preview") => {
     setMaxPanel((p) => (p === panel ? null : panel));
-  }
+  }, []);
 
-  async function copySnippet(snippet: string) {
+  const copySnippet = useCallback(async (snippet: string) => {
     try {
       await navigator.clipboard.writeText(snippet);
       showToast("Copied Markdown to clipboard");
     } catch {
       showToast("Copy failed");
     }
-  }
+  }, [showToast]);
 
-  function copyAllSnippets() {
+  const copyAllSnippets = useCallback(() => {
     if (files.length === 0) return;
     const bundle = files.map((f) => f.snippet).join("\n");
     navigator.clipboard.writeText(bundle).then(() => showToast("Copied all snippets"));
-  }
+  }, [files, showToast]);
 
-  function download(filename: string, content: string, type = "text/plain") {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  function downloadSnippets() {
+  const downloadSnippets = useCallback(() => {
     const content = files.map((f) => f.snippet).join("\n");
     download("attachments.md", content, "text/markdown");
-  }
+  }, [files]);
 
-  function copyMarkdown() {
+  const copyMarkdown = useCallback(() => {
     navigator.clipboard.writeText(text).then(() => showToast("Copied Markdown"));
-  }
+  }, [text, showToast]);
 
-  function downloadMarkdown() {
+  const downloadMarkdown = useCallback(() => {
     download("document.md", text, "text/markdown");
-  }
+  }, [text]);
 
-  function clearEditor() {
+  const clearEditor = useCallback(() => {
     setText("");
-  }
+  }, []);
 
-  function resetToWelcome() {
+  const resetToWelcome = useCallback(() => {
     fetch('/template.md')
       .then(response => response.text())
       .then(content => {
@@ -149,25 +155,19 @@ export default function DawnMark() {
         setText('# Welcome to DawnMark\n\nStart writing your markdown here...');
         showToast("Reset to fallback content");
       });
-  }
+  }, [showToast]);
 
-  function copyPreviewHTML() {
+  const copyPreviewHTML = useCallback(() => {
     if (!previewRef.current) return;
     const html = previewRef.current.innerHTML;
     navigator.clipboard.writeText(html).then(() => showToast("Copied HTML"));
-  }
+  }, [showToast]);
 
-  function downloadPreviewHTML() {
+  const downloadPreviewHTML = useCallback(() => {
     if (!previewRef.current) return;
     const html = `<!doctype html><meta charset=\"utf-8\"><title>DawnMark Preview</title><link rel=\"stylesheet\" href=\"https://unpkg.com/github-markdown-css@5/github-markdown-dark.css\"><article class=\"markdown-body\">${previewRef.current.innerHTML}</article>`;
     download("preview.html", html, "text/html");
-  }
-
-  function showToast(msg: string) {
-    setToast(msg);
-    const id = setTimeout(() => setToast(""), 1200);
-    return () => clearTimeout(id);
-  }
+  }, []);
 
   return (
     <>

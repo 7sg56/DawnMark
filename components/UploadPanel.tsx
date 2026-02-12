@@ -37,14 +37,14 @@ function snippetFor(file: File, url: string) {
   return `[${safeName}](${url})`;
 }
 
-export default function UploadPanel({
+const UploadPanel = React.memo(({
   files,
   onFilesChange,
   onCopySnippet,
   onCopyAllSnippets,
   onDownloadSnippets,
   maxPanel
-}: UploadPanelProps) {
+}: UploadPanelProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const dropzoneRef = useRef<HTMLDivElement | null>(null);
   const urlsRef = useRef<string[]>([]);
@@ -171,4 +171,6 @@ export default function UploadPanel({
       </div>
     </div>
   );
-}
+});
+
+export default UploadPanel;

@@ -15,7 +15,7 @@ interface EditorPanelProps {
   onToggleMax: (panel: "uploads" | "editor" | "preview") => void;
 }
 
-export default function EditorPanel({
+const EditorPanel = React.memo(({
   text,
   onTextChange,
   onOpenFileDialog,
@@ -25,7 +25,7 @@ export default function EditorPanel({
   onResetToWelcome,
   maxPanel,
   onToggleMax
-}: EditorPanelProps) {
+}: EditorPanelProps) => {
 
   return (
     <div className={`panel grow ${maxPanel === "editor" ? "panel-max" : ""}`}>
@@ -61,4 +61,6 @@ export default function EditorPanel({
       </div>
     </div>
   );
-}
+});
+
+export default EditorPanel;
