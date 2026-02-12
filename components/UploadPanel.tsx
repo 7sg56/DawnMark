@@ -25,6 +25,11 @@ export default function UploadPanel({
   maxPanel
 }: UploadPanelProps) {
   const dropzoneRef = useRef<HTMLDivElement | null>(null);
+  const onUploadFilesRef = useRef(onUploadFiles);
+
+  useEffect(() => {
+    onUploadFilesRef.current = onUploadFiles;
+  });
 
   // Dropzone interactions
   useEffect(() => {
@@ -33,7 +38,7 @@ export default function UploadPanel({
     const onDrop = (e: DragEvent) => {
       e.preventDefault();
       dz.classList.remove("dragover");
-      onUploadFiles(e.dataTransfer?.files ?? null);
+      onUploadFilesRef.current(e.dataTransfer?.files ?? null);
     };
     const onDragOver = (e: DragEvent) => {
       e.preventDefault();
@@ -51,7 +56,7 @@ export default function UploadPanel({
       dz.removeEventListener("dragover", onDragOver);
       dz.removeEventListener("dragleave", onDragLeave);
     };
-  }, [onUploadFiles]);
+  }, []);
 
   return (
     <div className={`panel uploads ${maxPanel === "uploads" ? "panel-max" : ""}`}>
