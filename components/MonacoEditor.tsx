@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor } from "@monaco-editor/react";
 
 interface MonacoEditorProps {
@@ -14,8 +14,6 @@ export default function MonacoEditor({
   onChange,
   className = ""
 }: MonacoEditorProps) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const editorRef = useRef<any>(null);
   const [theme, setTheme] = useState('vs-dark');
   const [isClient, setIsClient] = useState(false);
 
@@ -49,8 +47,6 @@ export default function MonacoEditor({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditorDidMount = (editor: any) => {
-    editorRef.current = editor;
-    
     // Configure editor options
     editor.updateOptions({
       minimap: { enabled: false },
