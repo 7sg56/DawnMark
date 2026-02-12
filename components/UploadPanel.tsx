@@ -56,7 +56,7 @@ export default function UploadPanel({
       const file = list[i]!;
       const url = URL.createObjectURL(file);
       next.push({
-        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
+        id: crypto.randomUUID(),
         file,
         url,
         snippet: snippetFor(file, url),
