@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
@@ -80,7 +80,7 @@ export default function DawnMark() {
     };
   }, []);
 
-  function handleFiles(list: FileList | null) {
+  const handleFiles = useCallback((list: FileList | null) => {
     if (!list || list.length === 0) return;
     const next: BlobEntry[] = [];
     for (let i = 0; i < list.length; i++) {
@@ -95,7 +95,7 @@ export default function DawnMark() {
       urlsRef.current.push(url);
     }
     setFiles((prev) => [...next, ...prev]);
-  }
+  }, []);
 
 
   function openFileDialog() {
