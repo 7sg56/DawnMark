@@ -34,11 +34,6 @@ export default function DawnMark() {
   const urlsRef = useRef<string[]>([]);
   const [toast, setToast] = useState<string>("");
 
-  // Configure global marked instance once (GFM, breaks, no syntax highlighting)
-  useEffect(() => {
-    marked.use({ gfm: true, breaks: false });
-  }, []);
-
 
   // Render markdown -> preview with KaTeX auto-render
   useEffect(() => {
