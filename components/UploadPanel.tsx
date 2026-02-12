@@ -1,35 +1,74 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { BlobEntry } from "./types";
-import { formatBytes, isImage } from "./file-utils";
+
+interface BlobEntry {
+  id: string;
+  file: File;
+  url: string;
+  snippet: string;
+}
 
 interface UploadPanelProps {
   files: BlobEntry[];
-  onUploadFiles: (files: FileList | null) => void;
-  onOpenFileDialog: () => void;
+  onFilesChange: (files: BlobEntry[]) => void;
   onCopySnippet: (snippet: string) => void;
   onCopyAllSnippets: () => void;
   onDownloadSnippets: () => void;
   maxPanel: string | null;
 }
 
-export default function UploadPanel({
+function formatBytes(bytes: number) {
+  if (bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"] as const;
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
+}
+
+function isImage(file: File) {
+  return file.type.startsWith("image/");
+}
+
+function snippetFor(file: File, url: string) {
+  const safeName = file.name.replace(/\]/g, ")");
+  if (isImage(file)) return `![${safeName}](${url})`;
+  return `[${safeName}](${url})`;
+}
+
+const UploadPanel = React.memo(({
   files,
-  onUploadFiles,
-  onOpenFileDialog,
+  onFilesChange,
   onCopySnippet,
   onCopyAllSnippets,
   onDownloadSnippets,
   maxPanel
-}: UploadPanelProps) {
+}: UploadPanelProps) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const dropzoneRef = useRef<HTMLDivElement | null>(null);
-  const onUploadFilesRef = useRef(onUploadFiles);
+  const urlsRef = useRef<string[]>([]);
 
-  useEffect(() => {
-    onUploadFilesRef.current = onUploadFiles;
-  });
+  const handleFiles = useCallback((list: FileList | null) => {
+    if (!list || list.length === 0) return;
+    const next: BlobEntry[] = [];
+    for (let i = 0; i < list.length; i++) {
+      const file = list[i]!;
+      const url = URL.createObjectURL(file);
+      next.push({
+        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
+        file,
+        url,
+        snippet: snippetFor(file, url),
+      });
+      urlsRef.current.push(url);
+    }
+    onFilesChange([...next, ...files]);
+  }, [files, onFilesChange]);
+
+  function openFileDialog() {
+    fileInputRef.current?.click();
+  }
 
   // Dropzone interactions
   useEffect(() => {
@@ -38,7 +77,7 @@ export default function UploadPanel({
     const onDrop = (e: DragEvent) => {
       e.preventDefault();
       dz.classList.remove("dragover");
-      onUploadFilesRef.current(e.dataTransfer?.files ?? null);
+      handleFiles(e.dataTransfer?.files ?? null);
     };
     const onDragOver = (e: DragEvent) => {
       e.preventDefault();
@@ -56,6 +95,14 @@ export default function UploadPanel({
       dz.removeEventListener("dragover", onDragOver);
       dz.removeEventListener("dragleave", onDragLeave);
     };
+  }, [handleFiles]);
+
+  // Cleanup URLs on unmount
+  useEffect(() => {
+    const urls = urlsRef.current;
+    return () => {
+      urls.forEach((u) => URL.revokeObjectURL(u));
+    };
   }, []);
 
   return (
@@ -63,7 +110,7 @@ export default function UploadPanel({
       <div className="panel-header">
         <div className="panel-title">Uploads</div>
         <div className="panel-actions">
-          <button className="icon-btn" title="Upload files" aria-label="Upload files" onClick={onOpenFileDialog}>
+          <button className="icon-btn" title="Upload files" aria-label="Upload files" onClick={openFileDialog}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 5 17 10"/><line x1="12" y1="5" x2="12" y2="21"/></svg>
           </button>
           <button className="icon-btn" title="Copy all snippets" aria-label="Copy all snippets" onClick={onCopyAllSnippets}>
@@ -82,8 +129,8 @@ export default function UploadPanel({
           tabIndex={0}
           role="button"
           aria-label="Drop files here or press Enter to browse"
-          onClick={(e) => { const target = e.target as HTMLElement; if (target.closest(".file-item")) return; onOpenFileDialog(); }}
-          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onOpenFileDialog(); }}
+          onClick={(e) => { const target = e.target as HTMLElement; if (target.closest(".file-item")) return; openFileDialog(); }}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") openFileDialog(); }}
         >
           {files.length === 0 ? (
             <p>Drop files here or click to browse</p>
@@ -112,8 +159,18 @@ export default function UploadPanel({
             </ul>
           )}
         </div>
+        <input
+          ref={fileInputRef}
+          id="file-input"
+          type="file"
+          multiple
+          hidden
+          onChange={(e) => { handleFiles(e.currentTarget.files); e.currentTarget.value = ""; }}
+        />
         <p className="hint">Tip: Click a file to copy its Markdown snippet, then paste it into the editor.</p>
       </div>
     </div>
   );
-}
+});
+
+export default UploadPanel;
