@@ -5,11 +5,12 @@ import DOMPurify from "dompurify";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
-// @ts-expect-error - KaTeX auto-render doesn't have proper TypeScript types
-import renderMathInElement from "katex/dist/contrib/auto-render";
+import renderMathInElement from "./katex-auto-render";
 import UploadPanel from "./UploadPanel";
 import EditorPanel from "./EditorPanel";
 import PreviewPanel from "./PreviewPanel";
+import { BlobEntry } from "./types";
+import { snippetFor } from "./file-utils";
 
 const marked = new Marked(
   markedHighlight({
@@ -24,43 +25,13 @@ const marked = new Marked(
 marked.use({ gfm: true, breaks: false });
 
 
-interface BlobEntry {
-  id: string;
-  file: File;
-  url: string;
-  snippet: string;
-}
-
-
-function download(filename: string, content: string, type = "text/plain") {
-  const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
 export default function DawnMark() {
   const [text, setText] = useState<string>("");
   const [files, setFiles] = useState<BlobEntry[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
+  const urlsRef = useRef<string[]>([]);
   const [toast, setToast] = useState<string>("");
-
-  const showToast = useCallback((msg: string) => {
-    setToast(msg);
-    const id = setTimeout(() => setToast(""), 1200);
-    return () => clearTimeout(id);
-  }, []);
-
-  // Configure global marked instance once (GFM, breaks, no syntax highlighting)
-  useEffect(() => {
-    marked.use({ gfm: true, breaks: false });
-  }, []);
 
 
   // Render markdown -> preview with KaTeX auto-render
@@ -100,7 +71,30 @@ export default function DawnMark() {
       .catch(() => setText('# Welcome to DawnMark\n\nStart writing your markdown here...'));
   }, []);
 
+  // Cleanup URLs on unmount
+  useEffect(() => {
+    const urls = urlsRef.current;
+    return () => {
+      urls.forEach((u) => URL.revokeObjectURL(u));
+    };
+  }, []);
 
+  const handleFiles = useCallback((list: FileList | null) => {
+    if (!list || list.length === 0) return;
+    const next: BlobEntry[] = [];
+    for (let i = 0; i < list.length; i++) {
+      const file = list[i]!;
+      const url = URL.createObjectURL(file);
+      next.push({
+        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
+        file,
+        url,
+        snippet: snippetFor(file, url),
+      });
+      urlsRef.current.push(url);
+    }
+    setFiles((prev) => [...next, ...prev]);
+  }, []);
 
 
   const openFileDialog = useCallback(() => {
@@ -174,7 +168,8 @@ export default function DawnMark() {
       <section className="left">
         <UploadPanel
           files={files}
-          onFilesChange={setFiles}
+          onUploadFiles={handleFiles}
+          onOpenFileDialog={openFileDialog}
           onCopySnippet={copySnippet}
           onCopyAllSnippets={copyAllSnippets}
           onDownloadSnippets={downloadSnippets}
@@ -207,6 +202,14 @@ export default function DawnMark() {
       <div className={`toast ${toast ? "show" : ""}`} role="status" aria-live="polite" aria-atomic="true">
         {toast}
       </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        hidden
+        onChange={(e) => { handleFiles(e.currentTarget.files); e.currentTarget.value = ""; }}
+      />
     </>
   );
 }
