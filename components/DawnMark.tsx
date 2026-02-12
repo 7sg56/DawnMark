@@ -10,6 +10,8 @@ import renderMathInElement from "katex/dist/contrib/auto-render";
 import UploadPanel from "./UploadPanel";
 import EditorPanel from "./EditorPanel";
 import PreviewPanel from "./PreviewPanel";
+import { BlobEntry } from "./types";
+import { snippetFor } from "./file-utils";
 
 const marked = new Marked(
   markedHighlight({
@@ -24,19 +26,12 @@ const marked = new Marked(
 marked.use({ gfm: true, breaks: false });
 
 
-interface BlobEntry {
-  id: string;
-  file: File;
-  url: string;
-  snippet: string;
-}
-
-
 export default function DawnMark() {
   const [text, setText] = useState<string>("");
   const [files, setFiles] = useState<BlobEntry[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
+  const urlsRef = useRef<string[]>([]);
   const [toast, setToast] = useState<string>("");
 
   // Configure global marked instance once (GFM, breaks, no syntax highlighting)
@@ -82,7 +77,30 @@ export default function DawnMark() {
       .catch(() => setText('# Welcome to DawnMark\n\nStart writing your markdown here...'));
   }, []);
 
+  // Cleanup URLs on unmount
+  useEffect(() => {
+    const urls = urlsRef.current;
+    return () => {
+      urls.forEach((u) => URL.revokeObjectURL(u));
+    };
+  }, []);
 
+  function handleFiles(list: FileList | null) {
+    if (!list || list.length === 0) return;
+    const next: BlobEntry[] = [];
+    for (let i = 0; i < list.length; i++) {
+      const file = list[i]!;
+      const url = URL.createObjectURL(file);
+      next.push({
+        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
+        file,
+        url,
+        snippet: snippetFor(file, url),
+      });
+      urlsRef.current.push(url);
+    }
+    setFiles((prev) => [...next, ...prev]);
+  }
 
 
   function openFileDialog() {
@@ -174,7 +192,8 @@ export default function DawnMark() {
       <section className="left">
         <UploadPanel
           files={files}
-          onFilesChange={setFiles}
+          onUploadFiles={handleFiles}
+          onOpenFileDialog={openFileDialog}
           onCopySnippet={copySnippet}
           onCopyAllSnippets={copyAllSnippets}
           onDownloadSnippets={downloadSnippets}
@@ -207,6 +226,14 @@ export default function DawnMark() {
       <div className={`toast ${toast ? "show" : ""}`} role="status" aria-live="polite" aria-atomic="true">
         {toast}
       </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        hidden
+        onChange={(e) => { handleFiles(e.currentTarget.files); e.currentTarget.value = ""; }}
+      />
     </>
   );
 }
