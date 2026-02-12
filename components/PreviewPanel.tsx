@@ -11,13 +11,13 @@ interface PreviewPanelProps {
   onToggleMax: (panel: "uploads" | "editor" | "preview") => void;
 }
 
-export default function PreviewPanel({
+const PreviewPanel = React.memo(({
   previewRef,
   onCopyPreviewHTML,
   onDownloadPreviewHTML,
   maxPanel,
   onToggleMax
-}: PreviewPanelProps) {
+}: PreviewPanelProps) => {
   return (
     <div className={`panel grow ${maxPanel === "preview" ? "panel-max" : ""}`}>
       <div className="panel-header">
@@ -39,4 +39,6 @@ export default function PreviewPanel({
       </div>
     </div>
   );
-}
+});
+
+export default PreviewPanel;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useCallback } from "react";
-import { UploadIcon, CopyIcon, DownloadIcon } from "./Icons";
+import Image from "next/image";
 
 interface BlobEntry {
   id: string;
@@ -37,14 +37,14 @@ function snippetFor(file: File, url: string) {
   return `[${safeName}](${url})`;
 }
 
-export default function UploadPanel({
+const UploadPanel = React.memo(({
   files,
   onFilesChange,
   onCopySnippet,
   onCopyAllSnippets,
   onDownloadSnippets,
   maxPanel
-}: UploadPanelProps) {
+}: UploadPanelProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const dropzoneRef = useRef<HTMLDivElement | null>(null);
   const urlsRef = useRef<string[]>([]);
@@ -99,8 +99,9 @@ export default function UploadPanel({
 
   // Cleanup URLs on unmount
   useEffect(() => {
+    const urls = urlsRef.current;
     return () => {
-      urlsRef.current.forEach((u) => URL.revokeObjectURL(u));
+      urls.forEach((u) => URL.revokeObjectURL(u));
     };
   }, []);
 
@@ -144,7 +145,7 @@ export default function UploadPanel({
               >
                 <div className="file-thumb" aria-hidden="true">
                   {isImage(f.file) ? (
-                    <img src={f.url} alt="" />
+                    <Image src={f.url} alt="" fill unoptimized className="object-cover" />
                   ) : (
                     <div className="file-glyph">📄</div>
                   )}
@@ -170,4 +171,6 @@ export default function UploadPanel({
       </div>
     </div>
   );
-}
+});
+
+export default UploadPanel;

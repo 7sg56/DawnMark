@@ -21,21 +21,22 @@ export default function MonacoEditor({
 
   // Check if we're on the client side
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true);
   }, []);
 
   // Detect theme from HTML class
   useEffect(() => {
     if (!isClient) return;
-    
+
     const updateTheme = () => {
-      const isDark = document.documentElement.classList.contains('dark') || 
+      const isDark = document.documentElement.classList.contains('dark') ||
                     !document.documentElement.classList.contains('light');
       setTheme(isDark ? 'vs-dark' : 'vs');
     };
 
     updateTheme();
-    
+
     // Watch for theme changes
     const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, {
@@ -49,7 +50,7 @@ export default function MonacoEditor({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
-    
+
     // Configure editor options
     editor.updateOptions({
       minimap: { enabled: false },
