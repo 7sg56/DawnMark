@@ -5,8 +5,7 @@ import DOMPurify from "dompurify";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
-// @ts-expect-error - KaTeX auto-render doesn't have proper TypeScript types
-import renderMathInElement from "katex/dist/contrib/auto-render";
+import renderMathInElement from "./katex-auto-render";
 import UploadPanel from "./UploadPanel";
 import EditorPanel from "./EditorPanel";
 import PreviewPanel from "./PreviewPanel";
